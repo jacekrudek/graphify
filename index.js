@@ -12,7 +12,7 @@ async function main() {
     console.log("CWD:", process.cwd());
 
     const fileContent = await readFile(
-      "./tests/tech_texts/express_road_1.txt",
+      "./tests/tech_texts/a1_autobahn.txt",
       "utf-8"
     );
 
@@ -20,7 +20,25 @@ async function main() {
       messages: [
         {
           role: "user",
-          content: `return the most important data from the below tech-text in a JSON format. the text: ${fileContent}`,
+          content: `You are an information extraction assistant.
+          From the technical text below, extract a structured representation of cities and their direct connections via infrastructure lines (e.g., railways, pipelines, electric lines, etc.). Output the result in JSON format as a list of objects, where each object contains a "city" field and a "connections" array isting all directly connected cities. Only list the immediate connections for every city, skip all the connections guiding through additional cities.
+          Format Example:
+          [
+            {
+              "city": "example",
+              "connections": ["city2", "city3"]
+            },
+            {
+              "city": "example2",
+              "connections": ["city4", "city5"]
+            }
+          ]
+
+          * Only include cities explicitly mentioned in the text.
+          * Treat connections as **bidirectional**, unless clearly stated otherwise.
+          * Do not list self-connections.
+          * Normalize city names (e.g., remove abbreviations or extra formatting).
+          Technical text: ${fileContent}`,
         },
       ],
       model: "llama-3.3-70b-versatile",
@@ -30,89 +48,6 @@ async function main() {
     console.log(response.choices[0].message.content);
   } catch (error) {
     console.error(error);
-  }
-}
-
-class UserService {
-  constructor() {
-    this.db = new Neo4jConnection();
-  }
-
-  // Create a user
-  async createUser(name, email) {
-    const session = this.db.getSession();
-    try {
-      const result = await session.run(
-        "CREATE (u:User {name: $name, email: $email}) RETURN u",
-        { name, email }
-      );
-      const user = result.records[0].get("u").properties;
-      console.log("Created user:", user);
-      return user;
-    } finally {
-      await session.close();
-    }
-  }
-
-  // Find users
-  async findUsers() {
-    const session = this.db.getSession();
-    try {
-      const result = await session.run("MATCH (u:User) RETURN u");
-      const users = result.records.map((record) => record.get("u").properties);
-      console.log("Found users:", users);
-      return users;
-    } finally {
-      await session.close();
-    }
-  }
-
-  // Create relationship
-  async createFriendship(user1Email, user2Email) {
-    const session = this.db.getSession();
-    try {
-      const result = await session.run(
-        `
-        MATCH (u1:User {email: $email1})
-        MATCH (u2:User {email: $email2})
-        CREATE (u1)-[r:FRIENDS_WITH]->(u2)
-        RETURN u1, u2, r
-      `,
-        { email1: user1Email, email2: user2Email }
-      );
-
-      console.log("Created friendship between users");
-      return result.records[0];
-    } finally {
-      await session.close();
-    }
-  }
-
-  // Find friends
-  async findFriends(userEmail) {
-    const session = this.db.getSession();
-    try {
-      const result = await session.run(
-        `
-        MATCH (u:User {email: $email})-[:FRIENDS_WITH]->(friend:User)
-        RETURN friend
-      `,
-        { email: userEmail }
-      );
-
-      const friends = result.records.map(
-        (record) => record.get("friend").properties
-      );
-      console.log(`Friends of ${userEmail}:`, friends);
-      return friends;
-    } finally {
-      await session.close();
-    }
-  }
-
-  // Close connection
-  async close() {
-    await this.db.close();
   }
 }
 
@@ -133,4 +68,4 @@ async function main2() {
   }
 }
 
-main2();
+main();
