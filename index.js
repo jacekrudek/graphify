@@ -2,6 +2,12 @@ import Groq from "groq-sdk";
 import "dotenv/config";
 import { readFile } from "fs/promises";
 import Neo4jConnection from "./src/db/neo4j.js";
+import neo4j from "neo4j-driver";
+
+const driver = neo4j.driver(
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+);
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -30,6 +36,36 @@ function transformForGraphDB(data) {
 
   return cityMap;
 }
+
+async function insertGraphData(cityMap) {
+  const session = driver.session();
+  try {
+    for (const [city, { connections }] of cityMap.entries()) {
+      await session.run(
+        `MERGE (c:City {name: $city})`,
+        { city }
+      );
+
+      for (const [target, distance] of connections.entries()) {
+        await session.run(
+          `
+          MERGE (c1:City {name: $city})
+          MERGE (c2:City {name: $target})
+          MERGE (c1)-[r:CONNECTED_TO {distance: $distance}]->(c2)
+          MERGE (c2)-[r2:CONNECTED_TO {distance: $distance}]->(c1)
+          `,
+          { city, target, distance: Number(distance) }
+        );
+      }
+    }
+    console.log("Success");
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    await session.close();
+  }
+}
+
 
 function extractJsonArray(str) {
   const start = str.indexOf("[");
@@ -98,16 +134,20 @@ async function main() {
 
     const cityMap = jsonData ? transformForGraphDB(jsonData) : null;
     if (cityMap) {
-      for (const [city, { connections }] of cityMap.entries()) {
-        console.log(`City: ${city}`);
-        for (const [target, distance] of connections.entries()) {
-          console.log(`  connects to ${target} (${distance} km)`);
-        }
-      }
+  for (const [city, { connections }] of cityMap.entries()) {
+    console.log(`City: ${city}`);
+    for (const [target, distance] of connections.entries()) {
+      console.log(`  connects to ${target} (${distance} km)`);
     }
+  }
+
+  await insertGraphData(cityMap);
+}
   } catch (error) {
     console.error(error);
   }
+
+  await driver.close();
 }
 
 main();
