@@ -7,6 +7,40 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+function transformForGraphDB(data) {
+  let jsonData;
+  if (typeof data === "string") {
+    try {
+      jsonData = JSON.parse(data);
+    } catch (e) {
+      console.error("Failed to parse JSON:", e);
+      return null;
+    }
+  } else {
+    jsonData = data;
+  }
+
+  const cityMap = new Map();
+
+  jsonData.forEach((item) => {
+    const city = item.city;
+    const connections = new Map(Object.entries(item.connections || {}));
+    cityMap.set(city, { connections });
+  });
+
+  return cityMap;
+}
+
+function extractJsonArray(str) {
+  const start = str.indexOf("[");
+  const end = str.lastIndexOf("]");
+  if (start === -1 || end === -1 || end < start) {
+    throw new Error("No valid JSON array found in the string.");
+  }
+  const jsonString = str.slice(start, end + 1);
+  return JSON.parse(jsonString);
+}
+
 async function main() {
   try {
     console.log("CWD:", process.cwd());
@@ -21,16 +55,22 @@ async function main() {
         {
           role: "user",
           content: `You are an information extraction assistant.
-          From the technical text below, extract a structured representation of cities and their direct connections via infrastructure lines (e.g., railways, pipelines, electric lines, etc.). Output the result in JSON format as a list of objects, where each object contains a "city" field and a "connections" array isting all directly connected cities. Only list the immediate connections for every city, skip all the connections guiding through additional cities.
+          From the technical text below, extract a structured representation of cities and their direct connections via infrastructure lines (e.g., railways, pipelines, electric lines, etc.). Output the result in JSON format as a list of objects, where each object contains a "city" field and a "connections" array listing all directly connected and the distance to them. Only list the immediate connections for every city, skip all the connections guiding through additional cities.
           Format Example:
           [
             {
               "city": "example",
-              "connections": ["city2", "city3"]
+              "connections": {
+                "city2": 20,
+                "city3": 30
+              }
             },
             {
               "city": "example2",
-              "connections": ["city4", "city5"]
+              "connections": {
+                "city2": 20,
+                "city3": 30
+              }
             }
           ]
 
@@ -46,25 +86,27 @@ async function main() {
     });
 
     console.log(response.choices[0].message.content);
+
+    const rawContent = response.choices[0].message.content;
+    let jsonData;
+    try {
+      jsonData = extractJsonArray(rawContent);
+    } catch (e) {
+      console.error("Failed to extract JSON array:", e);
+      jsonData = null;
+    }
+
+    const cityMap = jsonData ? transformForGraphDB(jsonData) : null;
+    if (cityMap) {
+      for (const [city, { connections }] of cityMap.entries()) {
+        console.log(`City: ${city}`);
+        for (const [target, distance] of connections.entries()) {
+          console.log(`  connects to ${target} (${distance} km)`);
+        }
+      }
+    }
   } catch (error) {
     console.error(error);
-  }
-}
-
-// Example usage
-async function main2() {
-  const db = new Neo4jConnection();
-
-  try {
-    let session = db.getSession();
-    const result = await session.run("MATCH (u:User) RETURN u");
-    const users = result.records.map((record) => record.get("u").properties);
-    console.log("Found users:", users);
-    await session.close();
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await db.close();
   }
 }
 

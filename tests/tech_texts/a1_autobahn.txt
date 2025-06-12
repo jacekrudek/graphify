@@ -6,60 +6,64 @@ Total Length: Approximately 566 km
 
 Cross-section: 2 carriageways with 2 lanes each (eventually 3 lanes on some sections)
 
-Permissible Speed:140 km/h on unrestricted motorway sections
+Permissible Speed: 140 km/h on unrestricted motorway sections
 
-Local restrictions near interchanges or tunnels
+Local Restrictions: Near interchanges or tunnels
 
 Surface: Mixed – concrete and asphalt (asphalt predominates)
 
-Toll Collection System:Toll sections managed by GDDKiA (General Directorate for National Roads and Motorways) – e-TOLL system
+Toll Collection System:
+
+Toll sections managed by GDDKiA – e-TOLL system
 
 Gdańsk – Toruń section (152 km) managed by a concessionaire (AmberOne)
 
-Route and Major Cities
+Route and Distances Between Major Cities
 
-The A1 Motorway passes through 5 provinces: Pomeranian, Kuyavian-Pomeranian, Łódź, Silesian, and Opole. It connects the following major urban centers:
+The A1 Motorway passes through 5 provinces: Pomeranian, Kuyavian-Pomeranian, Łódź, Silesian, and Opole. It connects the following major urban centers, with approximate distances between immediate city pairs:
 
-Gdańsk (motorway start – Rusocin interchange)
 
-Tczew
 
-Grudziądz
+Gdańsk (Rusocin interchange) → Tczew: ~30 km
 
-Toruń
+Tczew → Grudziądz: ~65 km
 
-Włocławek
+Grudziądz → Toruń: ~55 km
 
-Kowal
+Toruń → Włocławek: ~50 km
 
-Kutno (intersection with DK92 and DK60)
+Włocławek → Kowal: ~15 km
 
-Łódź (intersection with A2 motorway – Stryków interchange)
+Kowal → Kutno: ~40 km
 
-Piotrków Trybunalski
+Kutno → Łódź (Stryków interchange): ~55 km
 
-Radomsko
+Łódź → Piotrków Trybunalski: ~45 km
 
-Częstochowa
+Piotrków Trybunalski → Radomsko: ~40 km
 
-Gliwice (intersection with A4 motorway – Gliwice Sośnica interchange)
+Radomsko → Częstochowa: ~40 km
 
-Zabrze
+Częstochowa → Gliwice (Sośnica interchange): ~65 km
 
-Rybnik
+Gliwice → Zabrze: ~10 km
 
-Żory
+Zabrze → Rybnik: ~20 km
 
-Jastrzębie-Zdrój (indirectly)
+Rybnik → Żory: ~15 km
 
-Gorzyczki (border with the Czech Republic – connection with the Czech D1 towards Ostrava)
+Żory → Gorzyczki (Czech border): ~35 km
+
+
+
+(Jastrzębie-Zdrój is located nearby but is not directly connected to the A1)
 
 Significance of the A1 Motorway
 
-International Transport: Part of the Baltic–Adriatic Corridor, crucial for freight transport between the ports of Gdańsk and Gdynia and Southern Europe.
+International Transport: As part of the Baltic–Adriatic Corridor, it is crucial for freight movement between the ports of Gdańsk and Gdynia and Southern Europe.
 
-Domestic Transport: Enables fast travel between the north and south of the country, bypassing urban agglomerations.
+Domestic Transport: Enables fast travel between northern and southern Poland while bypassing major urban centers.
 
-Economic Development: Improves transport accessibility for the regions of central and southern Poland.
+Economic Development: Enhances transport accessibility for regions in central and southern Poland.
 
-Tourist Traffic: A key route for travel to the coast and the mountains.
+Tourism: Key route for travelers heading to the Baltic coast or the mountains in the south.
